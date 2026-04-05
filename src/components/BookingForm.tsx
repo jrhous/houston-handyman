@@ -2,6 +2,8 @@
 
 import { useState, FormEvent } from "react";
 
+const FORM_EMAIL = "John.R.Houston@icloud.com";
+
 const services = [
   "Basic Plumbing",
   "Small Electrical",
@@ -36,10 +38,36 @@ function FormField({
 
 export default function BookingForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    setSending(true);
+    setError("");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch(
+        `https://formsubmit.co/ajax/${FORM_EMAIL}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify(Object.fromEntries(formData)),
+        }
+      );
+      if (res.ok) {
+        setSubmitted(true);
+      } else {
+        setError("Transmission failed. Please try again or call us directly.");
+      }
+    } catch {
+      setError("Transmission failed. Please try again or call us directly.");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (submitted) {
@@ -87,11 +115,14 @@ export default function BookingForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4">
+        <input type="hidden" name="_subject" value="New Service Request - Houston We Have A Problem" />
+        <input type="text" name="_honey" style={{ display: "none" }} tabIndex={-1} />
         {/* Name + Phone */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Full Name" code="NME">
             <input
               type="text"
+              name="name"
               required
               placeholder="&gt; enter name_"
               className="terminal-input"
@@ -100,6 +131,7 @@ export default function BookingForm() {
           <FormField label="Phone" code="TEL">
             <input
               type="tel"
+              name="phone"
               required
               placeholder="&gt; (941) 000-0000_"
               className="terminal-input"
@@ -111,6 +143,7 @@ export default function BookingForm() {
         <FormField label="Email Address" code="EML">
           <input
             type="email"
+            name="email"
             placeholder="&gt; you@example.com_"
             className="terminal-input"
           />
@@ -118,7 +151,7 @@ export default function BookingForm() {
 
         {/* Service */}
         <FormField label="Service Needed" code="SVC">
-          <select required defaultValue="" className="terminal-select">
+          <select name="service" required defaultValue="" className="terminal-select">
             <option value="" disabled>
               Select a service...
             </option>
@@ -140,7 +173,7 @@ export default function BookingForm() {
               >
                 <input
                   type="radio"
-                  name="jobSize"
+                  name="job_size"
                   value={size}
                   className="sr-only peer"
                 />
@@ -155,6 +188,7 @@ export default function BookingForm() {
         {/* Description */}
         <FormField label="Job Description" code="DSC">
           <textarea
+            name="description"
             rows={4}
             placeholder="&gt; describe the mission..._"
             className="terminal-input resize-vertical"
@@ -163,18 +197,26 @@ export default function BookingForm() {
 
         {/* Preferred Date */}
         <FormField label="Preferred Date" code="DTE">
-          <input type="date" className="terminal-input" />
+          <input type="date" name="preferred_date" className="terminal-input" />
         </FormField>
 
         {/* Divider */}
         <div className="section-divider" />
 
+        {/* Error */}
+        {error && (
+          <div className="text-[10px] text-red-400 font-body text-center py-2 border border-red-400/20 bg-red-400/5">
+            {error}
+          </div>
+        )}
+
         {/* Submit */}
         <button
           type="submit"
-          className="retro-btn retro-btn-amber w-full text-center"
+          disabled={sending}
+          className="retro-btn retro-btn-amber w-full text-center disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Transmit Request
+          {sending ? "Transmitting..." : "Transmit Request"}
         </button>
 
         <p className="text-[9px] text-white-dim/20 font-body text-center tracking-wider">
