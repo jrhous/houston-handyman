@@ -78,6 +78,12 @@ export default function Footer() {
               >
                 (941) 303-2130
               </a>
+              <a
+                href="mailto:John.H@houstonwehaveaproblem.cc"
+                className="text-[10px] text-white-dim/55 hover:text-amber transition-colors font-body tracking-wider block mt-1"
+              >
+                John.H@houstonwehaveaproblem.cc
+              </a>
               <p className="text-[10px] text-white-dim/40 mt-1 font-body tracking-wider">
                 Mon&ndash;Sat 8am&ndash;6pm &middot; Sun by appointment
               </p>

@@ -54,6 +54,31 @@ export default function ContactPage() {
               </div>
             </div>
 
+            {/* Email */}
+            <div className="retro-panel overflow-hidden">
+              <div className="flex items-center gap-2 px-4 py-2 bg-steel-blue/8 border-b border-steel-blue/15">
+                <span className="text-[9px] font-heading text-amber/40 tracking-widest">
+                  EMAIL
+                </span>
+              </div>
+              <div className="p-5 flex items-start gap-4">
+                <div className="w-8 h-8 border border-amber/20 flex items-center justify-center flex-shrink-0">
+                  <span className="text-amber/60 text-sm">&#9993;</span>
+                </div>
+                <div>
+                  <a
+                    href="mailto:John.H@houstonwehaveaproblem.cc"
+                    className="text-amber hover:text-amber-glow transition-colors font-heading text-sm font-bold tracking-wider"
+                  >
+                    John.H@houstonwehaveaproblem.cc
+                  </a>
+                  <p className="text-[9px] text-white-dim/25 font-body mt-1 tracking-wider">
+                    TYPICALLY RESPONDS SAME DAY
+                  </p>
+                </div>
+              </div>
+            </div>
+
             {/* Hours */}
             <div className="retro-panel overflow-hidden">
               <div className="flex items-center gap-2 px-4 py-2 bg-steel-blue/8 border-b border-steel-blue/15">
